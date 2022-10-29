@@ -4,7 +4,8 @@ import React, {
   useEffect,
   useState
 } from "react"
-import axios from 'axios'
+
+import req from './req'
 
 
 // Context's for user CRUD
@@ -25,7 +26,7 @@ export default function UserProvider({ children }) {
 
   // Getting all users from server
   useEffect(() => {
-    axios.get('http://localhost:5000/all-users')
+    req.get('/all-users')
       .then(res => {
         setUsers(res.data.map((user, i) => ({ id: i + 1, ...user })))
       })
@@ -34,7 +35,7 @@ export default function UserProvider({ children }) {
 
   const updateUser = (oldUsername, updatedUser) => {
     return new Promise((res, rej) => {
-      axios.patch('http://localhost:5000/user', {
+      req.patch('/user', {
         oldUsername: oldUsername,
         updatedUser: updatedUser
       })
@@ -50,7 +51,7 @@ export default function UserProvider({ children }) {
   }
   const addUser = (user) => {
     return new Promise((res, rej) => {
-      axios.post('http://localhost:5000/user', user)
+      req.post('/user', user)
         .then(() => {
           setUsers([...users, { id: users.length + 1, ...user }])
           res()
@@ -59,7 +60,7 @@ export default function UserProvider({ children }) {
     })
   }
   const deleteUser = (username) => {
-    axios.delete(`http://localhost:5000/user/${username}`)
+    req.delete(`/user/${username}`)
       .then(() => {
         const newUsers = users.filter(user => user.username !== username)
         setUsers(newUsers)
