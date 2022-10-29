@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState
 } from "react"
+import axios from 'axios'
 
 
 // Context's for user CRUD
@@ -22,23 +23,51 @@ export const useDeleteUser = () => useContext(DeleteUserContext)
 export default function UserProvider({ children }) {
   const [users, setUsers] = useState([])
 
+  // Getting all users from server
   useEffect(() => {
-    setUsers([
-      { id: 1, name: 'usama', role: 'admin' },
-      { id: 2, name: 'usama', role: 'admin' },
-      { id: 3, name: 'usama', role: 'admin' },
-      { id: 4, name: 'usama', role: 'admin' },
-    ])
+    axios.get('http://localhost:5000/all-users')
+      .then(res => {
+        setUsers(res.data.map((user, i) => ({ id: i + 1, ...user })))
+      })
+      .catch(() => window.alert('Error loading data from server. Please reload page'))
   }, [])
 
-  const updateUser = () => {
-    console.log('updateing user')
+  const updateUser = (oldUsername, updatedUser) => {
+    return new Promise((res, rej) => {
+      axios.patch('http://localhost:5000/user', {
+        oldUsername: oldUsername,
+        updatedUser: updatedUser
+      })
+        .then(() => {
+          const updatedUsers = [...users]
+          const index = users.findIndex(user => user.username == oldUsername)
+          updatedUsers[index] = { id: updatedUsers[index].id, ...updatedUser }
+          setUsers(updatedUsers)
+        })
+        .catch(() => {
+          window.alert('Sorry! Updation failed. Try again')
+        })
+    })
   }
-  const addUser = () => {
-    console.log('adding user')
+  const addUser = (user) => {
+    return new Promise((res, rej) => {
+      axios.post('http://localhost:5000/user', user)
+        .then(() => {
+          setUsers([...users, { id: users.length + 1, ...user }])
+          res()
+        })
+        .catch(rej)
+    })
   }
-  const deleteUser = () => {
-    console.log('deleting user')
+  const deleteUser = (username) => {
+    axios.delete(`http://localhost:5000/user${username}`)
+      .then(() => {
+        const newUsers = users.filter(user => user.username !== username)
+        setUsers(newUsers)
+      })
+      .catch(() => {
+        window.alert('Error deleting user. Try again')
+      })
   }
 
   return <>

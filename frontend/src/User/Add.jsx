@@ -1,42 +1,30 @@
-import { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import {
   TextField,
   Button,
-  Container
+  Container,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@mui/material'
-import Alert from '@mui/material/Alert'
 
+import { useAddUser } from '../UsersContext'
 
-function User() {
-  const [user, setUser] = useState({ name: '', role: '' })
-  const [submissionError, setSubmissionError] = useState(undefined)
+function Add() {
+  const [user, setUser] = useState({ username: '', password: '', role: 'user' })
+  const addUser = useAddUser()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    const encodedUrl = `name=${user.name}&role=${user.role}`
-    fetch(process.env.REACT_APP_API_URL + '/user', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/x-www-form-urlencoded',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: encodedUrl,
-    })
-      .then(res => {
-        if (res.status !== 201) {
-          console.log(res)
-          setSubmissionError(true)
-          return
-        }
-        setSubmissionError(false)
-        setUser({ name: '', role: '' })
+    addUser(user)
+      .then(() => {
+        setUser({ username: '', password: '', role: 'user' })
+        window.alert('User has been added')
       })
-      .catch(err => {
-        console.error(err)
-        setSubmissionError(true)
-      })
+      .catch(() => window.alert('Some error occurred. Try again'))
   }
 
   return <>
@@ -48,22 +36,38 @@ function User() {
           width: 350,
         }}>
           <TextField
-            value={user.name}
-            onChange={e => setUser({ ...user, name: e.target.value })}
+            value={user.username}
+            onChange={e => setUser({ ...user, username: e.target.value })}
             id="filled-basic"
-            label="Name"
+            label="Username/Name"
             variant="outlined"
             required
           />
           <TextField
-            value={user.role}
-            onChange={e => setUser({ ...user, role: e.target.value })}
+            value={user.password}
+            onChange={e => setUser({ ...user, password: e.target.value })}
             id="filled-basic"
-            label="Role"
+            label="Password"
             variant="outlined"
             required
             style={{ marginTop: 10 }}
           />
+
+          <FormControl style={{ marginTop: 20 }}>
+            <FormLabel id="demo-radio-buttons-group-label">Role:</FormLabel>
+            <RadioGroup
+              onChange={e => setUser({ ...user, role: e.target.value })}
+              value={user.role}
+              aria-labelledby="demo-radio-buttons-group-label"
+              name="radio-buttons-group"
+              row
+              required
+            >
+              <FormControlLabel value="user" control={<Radio />} label="User" />
+              <FormControlLabel value="admin" control={<Radio />} label="Admin" />
+            </RadioGroup>
+          </FormControl>
+
           <Button
             type="submit"
             variant="contained"
@@ -73,16 +77,9 @@ function User() {
           </Button>
         </div>
       </form>
-
-      {submissionError == true &&
-        <Alert severity="error">Error submitting data! Please try again.</Alert>
-      }
-      {submissionError == false &&
-        <Alert severity="success">Data submitted successfully.</Alert>
-      }
     </Container>
   </>
 }
 
 
-export default User
+export default Add

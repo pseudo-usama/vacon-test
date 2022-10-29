@@ -9,8 +9,9 @@ import Navbar from './Navbar'
 import Home from './Home'
 
 import AllUsers from './User/List'
-import AddUser from './User/Add'
 import Profile from './User/Profile'
+import AddUser from './User/Add'
+import UpdateUser from './User/Update'
 
 import UserProvider from './UsersContext'
 
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             <Route path="/all-users" element={<AllUsers />} />
             <Route path="/add-user" element={<AddUser />} />
+            <Route path="/update/:username" element={<UpdateUser />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<Home />} />
           </Routes>

@@ -14,56 +14,47 @@ import {
 } from '../UsersContext'
 
 
-const AllUsers = () => {
+export default function AllUsers() {
   const [error, setError] = useState(false)
 
   const users = useUsers()
 
   return <>
-    {!error &&
-      <div style={{ height: '85vh', width: '600px', margin: 'auto' }
-      }>
-        <DataGrid
-          rows={users}
-          columns={columns}
-          pageSize={100}
-        // rowsPerPageOptions={[5]}
-        />
-      </div>
-    }
-    {error &&
-      <Alert severity="error">Error loading data! Please reload page.</Alert>
-    }
+    <div style={{ height: '85vh', width: '750px', margin: 'auto' }}>
+      <DataGrid
+        rows={users}
+        columns={columns}
+        pageSize={100}
+      // rowsPerPageOptions={[5]}
+      />
+    </div>
   </>
 }
 
-
-export default AllUsers
-
-
-const DeleteButton = () => {
+const DeleteButton = ({ username }) => {
   const deleteUser = useDeleteUser()
 
   return <DeleteIcon
     style={{ cursor: 'pointer' }}
-    onClick={deleteUser}
+    onClick={() => deleteUser(username)}
   />
 }
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'name', headerName: 'Name', width: 200 },
+  { field: 'id', headerName: 'No.', width: 70 },
+  { field: 'username', headerName: 'Username', width: 200 },
+  { field: 'password', headerName: 'Password', width: 200 },
   { field: 'role', headerName: 'Role', width: 100 },
   {
     field: "update",
     headerName: "Update",
     width: 100,
-    renderCell: ({ row }) => <Link to={`/student/${row.id}`}><EditIcon /></Link>
+    renderCell: ({ row }) => <Link to={`/update/${row.username}`}><EditIcon /></Link>
   },
   {
     field: "delete",
     headerName: "Delete",
     width: 100,
-    renderCell: ({ row }) => <DeleteButton />
+    renderCell: ({ row }) => <DeleteButton username={row.username} />
   }
 ]
