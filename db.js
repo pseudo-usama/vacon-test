@@ -15,6 +15,19 @@ function getAllUsers() {
   })
 }
 
+function findUser(username, password) {
+  return new Promise(async (res, rej) => {
+    try {
+      let user = await User.findOne({ username: username, password: password })
+      res(user)
+    }
+    catch (err) {
+      console.error(err)
+      rej()
+    }
+  })
+}
+
 // For Adding user
 function addUser(username, password, role) {
   return new Promise(async (res, rej) => {
@@ -65,6 +78,7 @@ function deleteUser(username) {
 
 module.exports = {
   getAllUsers,
+  findUser,
   addUser,
   updateUser,
   deleteUser
