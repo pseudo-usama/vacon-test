@@ -1,5 +1,15 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
+const mongoose = require('mongoose')
+
+const {
+  getAllUsers,
+  addUser,
+  updateUser,
+  deleteUser
+} = require('./db')
 
 
 const app = express()
@@ -10,13 +20,13 @@ app.use(express.json())
 
 // Only for admin
 app.get('/all-users', (req, res) => {
-  const users = [
-    { username: 'usama', password: '123', role: 'admin' },
-    { username: 'shah', password: '123', role: 'admin' },
-    { username: 'fai', password: '123', role: 'admin' },
-    { username: 'junaid', password: '123', role: 'admin' },
-  ]
-  res.status(200).json(users)
+  getAllUsers()
+    .then(users => {
+      res.status(200).json(users)
+    })
+    .catch(() => {
+      console.log('3280478758947')
+    })
 })
 app.get('/user', (req, res) => {
   res.status(200).send()
@@ -24,18 +34,35 @@ app.get('/user', (req, res) => {
 
 app.post('/user', (req, res) => {
   const { username, password, role } = req.body
+
+  addUser(username, password, role)
+    .then(user => {
+      res.status(200).send()
+    })
+    .catch(() => res.status(500).send())
+
   res.status(200).send()
 })
 
 app.patch('/user', (req, res) => {
   const { oldUsername, updatedUser } = req.body
-  console.log(oldUsername, updatedUser)
-  res.status(200).send()
+  updateUser(oldUsername, updatedUser)
+    .then(() => {
+      res.status(200).send()
+    })
+    .catch(() => res.status(500).send())
 })
 
-app.delete('/user:username', (req, res) => {
+app.delete('/user/:username', (req, res) => {
   const username = req.params.username
-  res.status(200).send()
+  deleteUser(username)
+    .then(() => res.status(200).send())
+    .catch(() => res.status(500).send())
 })
 
 app.listen(5000, () => console.info('Server running'))
+
+// DB connection
+mongoose.connect(process.env.DATABASE_URL)
+  .then(() => console.log('Database Connected'))
+  .catch(err => console.log(err));

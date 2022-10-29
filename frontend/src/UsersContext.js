@@ -43,10 +43,9 @@ export default function UserProvider({ children }) {
           const index = users.findIndex(user => user.username == oldUsername)
           updatedUsers[index] = { id: updatedUsers[index].id, ...updatedUser }
           setUsers(updatedUsers)
+          res()
         })
-        .catch(() => {
-          window.alert('Sorry! Updation failed. Try again')
-        })
+        .catch(rej)
     })
   }
   const addUser = (user) => {
@@ -60,7 +59,7 @@ export default function UserProvider({ children }) {
     })
   }
   const deleteUser = (username) => {
-    axios.delete(`http://localhost:5000/user${username}`)
+    axios.delete(`http://localhost:5000/user/${username}`)
       .then(() => {
         const newUsers = users.filter(user => user.username !== username)
         setUsers(newUsers)
