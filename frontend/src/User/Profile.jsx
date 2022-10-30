@@ -15,7 +15,7 @@ import { useUsers } from '../UsersContext'
 
 
 function Profile() {
-  const avatar = 'https://cdn3.iconfinder.com/data/icons/essential-rounded/64/Rounded-31-512.png'
+  // const avatar = 'https://cdn3.iconfinder.com/data/icons/essential-rounded/64/Rounded-31-512.png'
   const [user, setUser] = useState({ username: '', password: '', role: 'user', })
   const users = useUsers()
 
@@ -36,11 +36,11 @@ function Profile() {
       style={{ textAlign: 'center' }}
       component={Paper}
     >
-      <img
+      {/* <img
         style={{ maxWidth: 250, marginBottom: 40 }}
         src={avatar}
         alt="User image"
-      />
+      /> */}
 
       <TableContainer>
         <Table

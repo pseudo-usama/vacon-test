@@ -52,7 +52,10 @@ app.patch('/user', signedIn, (req, res) => {
   if (req.user.role == 'admin') {
     updateUser(oldUsername, updatedUser)
       .then(() => {
-        res.status(200).send()
+        res
+          .cookie('username', updatedUser.username)
+          .status(200)
+          .send()
       })
       .catch(() => res.status(500).send())
     return

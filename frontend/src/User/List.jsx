@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import Cookies from 'js-cookie'
 import { DataGrid } from '@mui/x-data-grid'
@@ -14,13 +14,11 @@ import {
 
 
 export default function AllUsers() {
-  const [error, setError] = useState(false)
   const navigate = useNavigate()
   const users = useUsers()
 
   if (Cookies.get('role') == 'user')
     navigate('/profile')
-
 
   return <>
     <div style={{ height: '85vh', width: '750px', margin: 'auto' }}>
@@ -39,7 +37,13 @@ const DeleteButton = ({ username }) => {
 
   return <DeleteIcon
     style={{ cursor: 'pointer' }}
-    onClick={() => deleteUser(username)}
+    onClick={() => {
+      if (username == Cookies.get('username')) {
+        window.alert('Cannot delete your own profile')
+        return
+      }
+      deleteUser(username)
+    }}
   />
 }
 
