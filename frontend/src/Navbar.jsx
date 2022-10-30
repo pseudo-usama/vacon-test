@@ -42,6 +42,8 @@ const Navbar = ({ window }) => {
       navigate('/signin')
   }, [])
 
+  const navItems = Cookies.get('role') == 'admin' ? adminNavItems : userNavItems
+
   const container = window !== undefined ? () => window().document.body : undefined
 
   const drawer = (
@@ -51,7 +53,7 @@ const Navbar = ({ window }) => {
       </Typography>
       <Divider />
       <List>
-        {adminNavItems.map((item) => (
+        {navItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
               <MyLink to={toURL(item)}>
@@ -92,7 +94,7 @@ const Navbar = ({ window }) => {
                 <MyLink to="/">Website</MyLink>
               </Typography>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                {adminNavItems.map((item) => (
+                {navItems.map((item) => (
                   <Button key={item} sx={{ color: '#fff' }}>
                     <MyLink to={toURL(item)}>
                       {item}

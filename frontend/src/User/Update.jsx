@@ -10,7 +10,7 @@ import {
   FormControlLabel,
   Radio,
 } from '@mui/material'
-
+import Cookies from 'js-cookie'
 import { useUsers, useUpdateUser } from '../UsersContext'
 
 export default function Update() {
@@ -63,21 +63,22 @@ export default function Update() {
             style={{ marginTop: 10 }}
           />
 
-          <FormControl style={{ marginTop: 20 }}>
-            <FormLabel id="demo-radio-buttons-group-label">Role:</FormLabel>
-            <RadioGroup
-              onChange={e => setUser({ ...user, role: e.target.value })}
-              value={user.role}
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group"
-              row
-              required
-            >
-              <FormControlLabel value="user" control={<Radio />} label="User" />
-              <FormControlLabel value="admin" control={<Radio />} label="Admin" />
-            </RadioGroup>
-          </FormControl>
-
+          {Cookies.get('role') == 'admin' &&
+            <FormControl style={{ marginTop: 20 }}>
+              <FormLabel id="demo-radio-buttons-group-label">Role:</FormLabel>
+              <RadioGroup
+                onChange={e => setUser({ ...user, role: e.target.value })}
+                value={user.role}
+                aria-labelledby="demo-radio-buttons-group-label"
+                name="radio-buttons-group"
+                row
+                required
+              >
+                <FormControlLabel value="user" control={<Radio />} label="User" />
+                <FormControlLabel value="admin" control={<Radio />} label="Admin" />
+              </RadioGroup>
+            </FormControl>
+          }
           <Button
             type="submit"
             variant="contained"

@@ -55,6 +55,7 @@ export default function Signin() {
             required
             style={{ marginTop: 10 }}
           />
+          <p>Super admin username & password are "admin"</p>
 
           <Button
             type="submit"

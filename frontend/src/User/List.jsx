@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from "react-router-dom"
-
+import { Link, useNavigate } from "react-router-dom"
+import Cookies from 'js-cookie'
 import { DataGrid } from '@mui/x-data-grid'
-import Alert from '@mui/material/Alert'
 import {
   Edit as EditIcon,
   Delete as DeleteIcon
@@ -16,8 +15,12 @@ import {
 
 export default function AllUsers() {
   const [error, setError] = useState(false)
-
+  const navigate = useNavigate()
   const users = useUsers()
+
+  if (Cookies.get('role') == 'user')
+    navigate('/profile')
+
 
   return <>
     <div style={{ height: '85vh', width: '750px', margin: 'auto' }}>

@@ -5,7 +5,6 @@ import {
   Route,
   useNavigate
 } from 'react-router-dom'
-import Cookies from 'js-cookie'
 
 import Navbar from './Navbar'
 import Home from './Home'
